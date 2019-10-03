@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Fitness tracker | Add to schedule</title>
+    </head>
+    <body>
+        <section>
+            <h1>Add to schedule</h1>
+            <a href="schedule.html">Return to schedule</a>
+
+            <form onsubmit="handlers.onSearch(event)"> 
+                <input type="search" placeholder="chest" id="search">
+                <button>🔍</button>
+                <button type="reset">Clear</button>
+                <button onclick="handlers.showAllExercises()" type="button">Show all</button>
+            </form>
+            
+            <ul>
+                <li>
+                    <form>
+                        <span>Pull-ups</span>
+                        <button>🖊️</button>
+                        
+                        <input placeholder="Number of repetitions" type="number" min="1">
+                        <button>➕</button>
+                    </form>
+                </li>
+                <li>
+                    <form>
+                        <span>Outdoor running</span>
+                        <button>🖊️</button>
+                        
+                        <input placeholder="Time in seconds" type="number" min="1">
+                        <button>➕</button>
+                    </form>
+                </li>
+                <li>
+                    <form>
+                        <span>Bench press</span>
+                        <button>🖊️</button>
+                        
+                        <input placeholder="Number of repetitions" type="number" min="1">
+                        <button>➕</button>
+                    </form>
+                </li>
+            </ul>
+
+            <a href="add-exercise.html">Add a new exercise</a>
+        </section>
+       <!-- <script src="proba.js"></script>  -->
+       <script src="addToSchedule.js"></script>
+    </body>
+</html>
+<!-- onsubmit="searchExercises(event)" -->
