@@ -1,42 +1,15 @@
-console.log('radi');
-// var util = {
-//     uuid: function () {
-//         /*jshint bitwise:false */
-//         var i, random;
-//         var uuid = '';
+console.log('it works');
 
-//         for (i = 0; i < 32; i++) {
-//             random = Math.random() * 16 | 0;
-//             if (i === 8 || i === 12 || i === 16 || i === 20) {
-//                 uuid += '-';
-//             }
-//             uuid += (i === 12 ? 4 : (i === 16 ? (random & 3 | 8) : random)).toString(16);
-//         }
-
-//         return uuid;
-//     },
-//     pluralize: function (count, word) {
-//         return count === 1 ? word : word + 's';
-//     },
-//     store: function (namespace, data) {
-//         if (arguments.length > 1) {
-//             return localStorage.setItem(namespace, JSON.stringify(data));
-//         } else {
-//             var store = localStorage.getItem(namespace);
-//             return (store && JSON.parse(store)) || [];
-//         }
-//     }
-// };
 var exercises = {
-    exercise: [],
+    exercise:[],
     addExercise: function (name, muscleGroup, type) {
+         
         this.exercise.push({
             name: name,
             muscleGroup: muscleGroup,
             type: type
         })
-        // console.log(this.exercise);
-        //view.displayExercises();
+       
     }
 };
 
@@ -66,19 +39,21 @@ var handlers = {
         var muscleGroupInput = document.getElementById('muscle-group');
         var typeInput = this.getValueOfType();
 
-
-        exercises.addExercise(nameInput.value, muscleGroupInput.value, typeInput);
-        this.storeExercise();
-        nameInput.value = "";
-        muscleGroupInput.value = "";
-        typeInput = "";
+        if(nameInput.value === "" || muscleGroupInput.value === ""){
+            alert("potrebno je da popunite sva polja");
+        }else{exercises.addExercise(nameInput.value, muscleGroupInput.value, typeInput);
+            this.storeExercise();
+            nameInput.value = "";
+            muscleGroupInput.value = "";
+            typeInput = "";}
+            window.location = "http://127.0.0.1:5500/fitness-tracker/add-to-schedule.html";
+        
     },
     storeExercise: function () {
-        // arr.forEach(function (item) {
-        //     var stringifiedItem = JSON.stringify(item);
+       
         for (var i = 0; i < exercises.exercise.length; i++) {
-
-            localStorage.setItem(['actualExercises'], JSON.stringify(exercises.exercise));
+            var exercisesForStore = this.removeDuplicates();
+            localStorage.setItem(['actualExercises'], JSON.stringify(exercisesForStore));
 
 
         }
@@ -86,6 +61,44 @@ var handlers = {
 
 
 
-    }
-}
+    },
+    removeDuplicates: function (){
+        // Create an array of objects 
+    var arr = exercises.exercise;
+      
+    // Display the list of array objects 
+    //console.log(arr); 
 
+    // Declare a new array 
+   var newArray = []; 
+      
+    // Declare an empty object 
+    var uniqueObject = {}; 
+      
+    // Loop for the array elements 
+    for (var i in arr) { 
+
+        // Extract the title 
+      var  objTitle = arr[i]['name'].toLowerCase(); 
+
+        // Use the title as the index 
+        uniqueObject[objTitle] = arr[i]; 
+    } 
+      
+    // Loop to push unique object into array 
+    for (i in uniqueObject) { 
+        newArray.push(uniqueObject[i]); 
+    } 
+      
+    // Display the unique objects 
+   // console.log(newArray); 
+    return newArray;
+    }
+};
+
+
+
+
+exercises.exercise = JSON.parse( localStorage.getItem('actualExercises')) || [];
+console.log(exercises.exercise);
+//console.log(exercises.isExercise);
