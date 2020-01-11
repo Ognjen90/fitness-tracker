@@ -1,9 +1,10 @@
 console.log('radi');
 var exercises = [];
-console.log(exercises.length);
+//
 var storedExercises = localStorage.getItem('selectedExercises');
 exercises = JSON.parse(storedExercises);
 
+console.log(exercises.length);
 console.log(exercises);
 var controlExercises = {
     deleteExercise: function (position) {
@@ -15,11 +16,8 @@ var controlExercises = {
         event.target.parentNode.querySelectorAll('input').forEach(function (input) {
             editedExercise[input.name] = input.value;
         });
-    },
-    deleteExercise: function (position) {
-        exercises.splice(position, 1);
-        view.displayExercises();
-    },
+    }
+    
 };
 var view = {
     createNameSpan: function (value) {
@@ -73,8 +71,9 @@ var view = {
         deleteButton.type = 'button';
         return deleteButton;
     },
-    createExerciseForm: function (name, type, id) {
+    createExerciseForm: function (name, type, id, date) {
         var form = document.createElement('form');
+        form.setAttribute("date", date);
         form.appendChild(this.createNameSpan(name));
         form.appendChild(this.createTypeInput(type, id));
         form.appendChild(this.createEditButton());
@@ -86,63 +85,160 @@ var view = {
         var li = document.createElement("li");
         li.id = position;
 
-        li.appendChild(this.createExerciseForm(exercises[position].name, exercises[position].type.typeNumber, exercises[position].type.id));
+        li.appendChild(this.createExerciseForm(exercises[position].name, exercises[position].amount, exercises[position].id, exercises[position].date));
 
 
         li.style.display = 'flex';
         return li;
     },
+    getDate: function () {
+        var d = new Date();
+        var month = d.getMonth() + 1,
+            day = d.getDate() ;
+        year = d.getFullYear(),
+            hour = d.getHours(),
+            min = d.getMinutes();
+        var days = [
+            'Sun',
+            'Mon',
+            'Tue',
+            'Wed',
+            'Thu',
+            'Fri',
+            'Sat'
+        ];
+       
+        var today = year + "-" + month +  "-" + day ;
+       // console.log(today);
+
+        var months = [
+            'jan',
+            'feb',
+            'mar',
+            'april',
+            'maj',
+            'jun',
+            'jul',
+            'avgust',
+            'septembar',
+            'oktobar',
+            'novembar',
+            'decembar'
+
+        ];
+        var dayIndex = d.getDate();
+        var dayName = days[dayIndex];
+        var monthIndex = d.getMonth();
+        var monthName = months[monthIndex];
+      
+        console.log("date" + today);
+        return today;
+
+    },
     displayExercises: function () {
-        //var form = this.createExerciseForm(exercises,position);
+        var today = this.getDate();
+        var title = document.querySelector('h1');
+        title.textContent = "Schedule for" + " " + today;
+        console.log("dis" + today)
         var ul = document.querySelector("ul");
-        //var form = this.createExerciseForm();
-        // form.appendChild(ul);
+
         ul.innerHTML = "";
         if (exercises.length === 0) {
             ul.innerHTML = "nema programa";
         } else {
+            // exercises.forEach(function(exercise,i){
+            //     //if(exercise.date === today){
+            //         ul.appendChild(this.createExerciseLi(exercises, i));
+            //         console.log(ul);
+            //   //  }
+            // },this);
             for (var i = 0; i < exercises.length; i++) {
-
-                ul.appendChild(this.createExerciseLi(exercises, i));
-                //  console.log(ul);
+                if (exercises[i].date === today) {
+                    ul.appendChild(this.createExerciseLi(exercises, i));
+                    console.log(exercises[i]);
+                 } else {
+                    var inputDate = document.getElementById('formdate');
+                    if (exercises[i].date === inputDate.value) {
+                        title.textContent = "Schedule for" + " " + inputDate.value;
+                        ul.appendChild(this.createExerciseLi(exercises, i));
+                    }
+                }
             }
         }
     },
 };
 
 var events = {
+    removeLocalStorageValues: function (event) {
+        var storedNames = JSON.parse(localStorage.getItem("selectedExercises"));
+
+        // here you need to make a loop to find the index of item to delete
+        var indexToRemove = event.target.parentNode.parentNode.id;
+        var indexToRemoveAsNumber = parseInt(indexToRemove);
+
+        //remove item selected, second parameter is the number of items to delete 
+        storedNames.splice(indexToRemoveAsNumber, 1);
+
+        // Put the object into storage
+        localStorage.setItem('selectedExercises', JSON.stringify(storedNames));
+    },
     edit: function (event) {
         event.target.parentNode.querySelectorAll('input').forEach(function (input) {
             input.disabled = false;
         });
     },
-    deleteButton: function(){
-        document.addEventListener('click',function (event){
+    deleteButton: function () {
+        document.addEventListener('click', function (event) {
             var id = event.target.parentNode.parentNode.id;
             var idAsNumber = parseInt(id);
-            if(event.target.className === "deleteButton") {
+            if (event.target.className === "deleteButton") {
 
-                // var form  = document.querySelector('ul').childNodes;
-                // console.log(form);
-                // var id = event.target.parentNode.id;
-                 //console.log(id);
-                // for(var i = 0;i <= form.length;i++){
-                    controlExercises.deleteExercise(idAsNumber);
-                // }
+                controlExercises.deleteExercise(idAsNumber);
 
-                
-               
+
+                events.removeLocalStorageValues(event);
             }
+           
+
         })
     },
     save: function (event) {
+        var storedNames = JSON.parse(localStorage.getItem("selectedExercises"));
         var position = event.target.parentNode.parentNode.id;
         controlExercises.editExercise(position, event);
+        var indexToEditAsNumber = parseInt(position);
+        var editedExercise = storedNames[indexToEditAsNumber];
         event.target.parentNode.querySelectorAll('input').forEach(function (input) {
+            editedExercise[input.name] = input.value;
             input.disabled = true;
+
+
+        });
+        localStorage.setItem('selectedExercises', JSON.stringify(storedNames));
+    },
+    datePicker: function () {
+        var dateInputValue = document.getElementById('formdate').value;
+        var results = exercises.filter(function (singleExercise) {
+
+            return singleExercise.date === dateInputValue;
+        });
+        view.displayExercises(results);
+        // console.log(dateInputValue);
+        console.log(results);
+    },
+    onEnter: function () {
+        var dateInput = document.getElementById("formdate");
+        dateInput.addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                events.datePicker();
+            }
         });
     }
 };
-
-view.displayExercises();
+events.onEnter();
 events.deleteButton();
+//view.getDate();
+var exercises = JSON.parse(storedExercises) || [];
+view.displayExercises();
+
+//events.save(event);
