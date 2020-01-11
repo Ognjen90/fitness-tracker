@@ -1,4 +1,5 @@
 console.log('radi');
+
 var exercises = [];
 var storedExercises = localStorage.getItem('actualExercises');
 exercises = JSON.parse(storedExercises);
@@ -17,9 +18,6 @@ var view = {
     },
     createNameSpan: function (value) {
         var name = document.createElement("span");
-        //name.setAttribute("type", "text");
-        // name.name = 'name';
-        // name.disabled = true;
         name.textContent = value;
         return name;
     },
@@ -35,10 +33,12 @@ var view = {
     createTypeInput: function (value) {
         var typeInput = document.createElement('input');
         typeInput.type = 'number';
+        typeInput.className = "input";
         typeInput.name = value;
         typeInput.id = value;
         typeInput.value = value;
         typeInput.placeholder = this.getTypeOfInput(value);
+
         return typeInput;
 
     },
@@ -73,7 +73,7 @@ var view = {
         li.style.display = 'flex';
         return li;
     },
-    displayExercises: function (exercises) {
+    displayExercises: function () {
         var ul = document.querySelector("ul");
         ul.innerHTML = "";
         if (exercises.length === 0) {
@@ -89,23 +89,35 @@ var view = {
 }
 var selectedExercises = {
     selectedExercise: [],
-    addExercise: function (name, typeNumber, typeId,amount) {
+    addExercise: function (name, amount, id) {
         this.selectedExercise.push({
             name: name,
-            type: {
-                typeNumber: typeNumber,
-                id: typeId
-            },
-            amount: amount
+            amount: amount,
+            id: id,
+            date: this.getDate()
 
         })
         console.log(this.selectedExercise);
     },
+    getDate: function () {
+        var d = new Date();
+        var month = d.getMonth() + 1;
+        var day = d.getDate();
+        var year = d.getFullYear();
+        var hour = d.getHours();
+        var min = d.getMinutes();
+
+
+        var today = year + "-" + month + "-" + day;
+        return today;
+
+
+    },
     storeSelectedExercise: function () {
 
         for (var i = 0; i < selectedExercises.selectedExercise.length; i++) {
-
-            localStorage.setItem(['selectedExercises'], JSON.stringify(selectedExercises.selectedExercise));
+            var exercisesForStore =  selectedExercises.selectedExercise;
+            localStorage.setItem(['selectedExercises'], JSON.stringify(exercisesForStore));
 
         }
 
@@ -116,24 +128,22 @@ var handlers = {
     addExerciseToSchedule: function () {
         document.addEventListener('click', function (e) {
             if (e.target.className == "addButton") {
-                //   var form = document.getElementsByTagName('form');
-                //   var span = document.getElementsByTagName('span');
-                //   var input = document.getElementsByTagName('input').value;
-                //   var inputId = input.id;
-                //   selectedExercises.addExercise(span, input, inputId);
                 var form = e.target.parentNode.childNodes;
                 var span = form[0].textContent;
                 var input = form[1].value;
-                var inputId = form[1].id;
-                selectedExercises.addExercise(span, input, inputId, input);               
-                selectedExercises.storeSelectedExercise();
-                input = "";///////////////////////////////////////////ostaviti prazan input
-                console.log(form);//////////////////////////////////////////////////// ovo napraviti dinamicnije
-
+                var inputId = form[0].textContent;
+                if (input === "" || input === NaN) {
+                    alert('morate da unesete vrednost');
+                } else {
+                    selectedExercises.addExercise(span, input, inputId);
+                    selectedExercises.storeSelectedExercise();
+                    input = "";///////////////////////////////////////////ostaviti prazan input
+                    console.log(form);//////////////////////////////////////////////////// ovo napraviti dinamicnije
+                    view.displayExercises();
+                }
                 // window.location = 'http://127.0.0.1:5500/fitness-tracker/schedule.html';
             }
         })
-
 
     },
     onSearch: function (event) {
@@ -153,8 +163,45 @@ var handlers = {
     },
     showAllExercises: function () {
         document.getElementById('search').value = '';
+        document.getElementsByClassName('input').value = '';
+
         this.searchExercises();
+    },
+    removeDuplicates: function () {
+        // Create an array of objects 
+        var arr = selectedExercises.selectedExercise;
+
+        // Display the list of array objects 
+        //console.log(arr); 
+
+        // Declare a new array 
+        var newArray = [];
+
+        // Declare an empty object 
+        var uniqueObject = {};
+
+        // Loop for the array elements 
+        for (var i in arr) {
+
+            // Extract the title 
+            var objTitle = arr[i]['name'];
+
+            // Use the title as the index 
+            uniqueObject[objTitle] = arr[i];
+        }
+
+        // Loop to push unique object into array 
+        for (i in uniqueObject) {
+            newArray.push(uniqueObject[i]);
+        }
+
+        // Display the unique objects 
+        // console.log(newArray); 
+        return newArray;
     }
 };
-view.displayExercises(exercises);
 handlers.addExerciseToSchedule();
+var value = JSON.parse(localStorage.getItem('selectedExercises')) || [];
+selectedExercises.selectedExercise = [... new Set(value)];
+view.displayExercises();
+console.log(selectedExercises.selectedExercise);
