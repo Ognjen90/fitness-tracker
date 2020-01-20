@@ -1,47 +1,50 @@
 <!DOCTYPE html>
 <html>
-    <head>
-            <meta charset = "UTF-8" />
-        <title>Fitness tracker | Add exercise</title>
-    </head>
-    <body>
-        <section>
-            <h1>Add exercise</h1>
-            <a href="schedule.html">Return to schedule</a>
-            <form>
-                <label for="name">Name</label>
-                <input type="text" id="name" required />
 
-                <label for="muscle-group">Muscle group</label>
-                <select id="muscle-group" required />
-                    <option value="" disabled selected></option>
-                    <option value="neck">Neck</option>
-                    <option value="shoulders">Shoulders</option>
-                    <option value="back">Back</option>
-                    <option value="chest">Chest</option>
-                    <option value="triceps">Triceps</option>
-                    <option value="biceps">Biceps</option>
-                    <option value="forearms">Forearms</option>
-                    <option value="abs">Abs</option>
-                    <option value="glutes">Glutes</option>
-                    <option value="quads">Quads</option>
-                    <option value="calves">Calves</option>
-                    <option value="cardio">Cardio</option>
-                </select>
+<head>
+    <meta charset="UTF-8" />
+    <title>Fitness tracker | Add exercise</title>
+</head>
 
-                <label for="repetition">Repetition</label>
-                <input type="radio" id="repetition" class="radio" name="type">
+<body>
+    <section>
+        <h1>Add exercise</h1>
+        <a href="schedule.html">Return to schedule</a>
+        <form>
+            <label for="name">Name</label>
+            <input type="text" id="name" required />
 
-                <label for="time">Time</label>
-                <input type="radio" id="time" class="radio" name="type">
+            <label for="muscle-group">Muscle group</label>
+            <select id="muscle-group" required />
+            <option value="" disabled selected></option>
+            <option value="neck">Neck</option>
+            <option value="shoulders">Shoulders</option>
+            <option value="back">Back</option>
+            <option value="chest">Chest</option>
+            <option value="triceps">Triceps</option>
+            <option value="biceps">Biceps</option>
+            <option value="forearms">Forearms</option>
+            <option value="abs">Abs</option>
+            <option value="glutes">Glutes</option>
+            <option value="quads">Quads</option>
+            <option value="calves">Calves</option>
+            <option value="cardio">Cardio</option>
+            </select>
 
-                <label for="distance">Distance</label>
-                <input type="radio" id="distance" class="radio" name="type">
+            <label for="repetition">Repetition</label>
+            <input type="radio" id="repetition" class="radio" name="type">
 
-                <button type="button" onclick="handlers.addExercise()">Add</button>
-            </form>
-            <ul></ul>
-        </section>
-        <script src = "addExercise.js"></script>
-    </body>
+            <label for="time">Time</label>
+            <input type="radio" id="time" class="radio" name="type">
+
+            <label for="distance">Distance</label>
+            <input type="radio" id="distance" class="radio" name="type">
+
+            <button type="button" onclick="handlers.addExercise()">Add</button>
+        </form>
+        <ul></ul>
+    </section>
+    <script src="addExercise.js"></script>
+</body>
+
 </html>
