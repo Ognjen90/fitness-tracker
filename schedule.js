@@ -17,7 +17,7 @@ var controlExercises = {
             editedExercise[input.name] = input.value;
         });
     }
-    
+
 };
 var view = {
     createNameSpan: function (value) {
@@ -94,7 +94,7 @@ var view = {
     getDate: function () {
         var d = new Date();
         var month = d.getMonth() + 1,
-            day = d.getDate() ;
+            day = d.getDate();
         year = d.getFullYear(),
             hour = d.getHours(),
             min = d.getMinutes();
@@ -107,9 +107,9 @@ var view = {
             'Fri',
             'Sat'
         ];
-       
-        var today = year + "-" + month +  "-" + day ;
-       // console.log(today);
+
+        var today = year + "-" + month + "-" + day;
+        // console.log(today);
 
         var months = [
             'jan',
@@ -130,7 +130,7 @@ var view = {
         var dayName = days[dayIndex];
         var monthIndex = d.getMonth();
         var monthName = months[monthIndex];
-      
+
         console.log("date" + today);
         return today;
 
@@ -156,7 +156,7 @@ var view = {
                 if (exercises[i].date === today) {
                     ul.appendChild(this.createExerciseLi(exercises, i));
                     console.log(exercises[i]);
-                 } else {
+                } else {
                     var inputDate = document.getElementById('formdate');
                     if (exercises[i].date === inputDate.value) {
                         title.textContent = "Schedule for" + " " + inputDate.value;
@@ -198,7 +198,7 @@ var events = {
 
                 events.removeLocalStorageValues(event);
             }
-           
+
 
         })
     },
