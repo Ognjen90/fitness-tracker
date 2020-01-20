@@ -116,7 +116,7 @@ var selectedExercises = {
     storeSelectedExercise: function () {
 
         for (var i = 0; i < selectedExercises.selectedExercise.length; i++) {
-            var exercisesForStore =  selectedExercises.selectedExercise;
+            var exercisesForStore = selectedExercises.selectedExercise;
             localStorage.setItem(['selectedExercises'], JSON.stringify(exercisesForStore));
 
         }
